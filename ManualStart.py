@@ -4,7 +4,7 @@ import functools
 import tkinter as tk
 from tkinter import ttk
 
-
+@functools.cache
 def get_all_pokemon():
     url = "https://pokeapi.co/api/v2/pokemon?limit=2000"
     response = requests.get(url)
