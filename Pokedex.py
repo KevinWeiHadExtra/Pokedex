@@ -68,17 +68,14 @@ class Start(tk.Frame):
         SearchButton = tk.Button(Searchbar, text = "Search", width=20)
         SearchButton.grid(row=1, column=0, sticky="ne", padx = 10)
 
-        TestButton = tk.Button(Searchbar, text = "Test", width=20, command=self.PokemonEntry)
-        TestButton.grid(row=1, column=2, sticky="ne", padx = 10)
-
-        AdvancedSearchButton = tk.Button(Searchbar, text = "Advanced Search", width=20)
+        AdvancedSearchButton = tk.Button(Searchbar, text = "Advanced Search[TEST RN]", width=20, command=self.PokemonEntry)
         AdvancedSearchButton.grid(row = 1, column=1, sticky="nw", padx = 10)
         
         Footer = tk.Frame(self, bg = "red", height=5)
         Footer.grid(row=3, column=0, sticky="nsew")
         Footer.grid_rowconfigure(0, weight=1)
     
-    def PokemonEntry(self, str = "honedge"):
+    def PokemonEntry(self, str = "gallade"):
         PokePage = PokemonPage(self, str)
         
 
