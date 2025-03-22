@@ -39,7 +39,5 @@ root = tk.Tk()
 root.title("Pokedex")
 root.geometry("300x600")
 
-
-
 combo_box = ttk.Combobox(root, values = pokemonNames).grid(row=0,column=0)
 root.mainloop()

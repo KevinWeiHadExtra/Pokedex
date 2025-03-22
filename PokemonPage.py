@@ -6,26 +6,33 @@ from tkinter import font
 from PIL import ImageTk, Image
 from io import BytesIO
 
+#Toplevel window that shows the selected pokemon's information
+#Topwindow because its common to want to look up multiple pokemon to compare them
 class PokemonPage(tk.Toplevel):
+    #Name gets passed in initialization so that I can pull the information from the api
     def __init__(self, parent, pokename, *args, **kargs):
         tk.Toplevel.__init__(self, parent, *args, **kargs)
 
+        #Setting window name in accordance to pokemon name as well as window size
         self.title(pokename.capitalize())
         self.pokename = pokename
         self.geometry("1280x720")
         self.minsize(1280,720)
         self.maxsize(1280,720)
 
+        #Get the pokemon url via the name by finding it in the AllPokemon.json file which was made through the https://pokeapi.co/api/v2/pokemon?limit=2000 call
+        #Realisticly I should probbaly pass the url along with the name when the search algorithm gets implemented because I will probably get that info then
+        #That would probably be more efficient but I made this page first and wanted a easy out while I designed the pokemon page
         def getPokemonURL():
             with open('AllPokemon.json', 'r') as file:
                 AllPokemon = file.read()
                 AllPokemondict = json.loads(AllPokemon)
                 for pokemon in AllPokemondict['results']:
                     if self.pokename == pokemon['name']:
-                        return pokemon["url"]
-                    
+                        return pokemon["url"]            
         url = getPokemonURL()
 
+        #Get the respective pokemon info using the url
         @functools.cache
         def get_pokemon_info():
             response = requests.get(url)
@@ -34,10 +41,9 @@ class PokemonPage(tk.Toplevel):
             else:
                 print("error")
                 return None
-        
-        
         PokeInfo = get_pokemon_info()
         
+        #Get the pokemon picture url in the info pulled from the last call 
         imageURL = PokeInfo["sprites"]["other"]["official-artwork"]["front_default"]
         def getImage():
             response = requests.get(imageURL)
@@ -48,28 +54,30 @@ class PokemonPage(tk.Toplevel):
             else:
                 print("error")
                 return None
-        
         sprite = getImage()
+        #Not sure if needed if all the pictures in the api are the same size, but resize them to make sure
         sprite2 = sprite.resize((400,400))
         self.sprite3 = ImageTk.PhotoImage(sprite2)
 
-        #print(PokeInfo["species"]["url"])
-        #print(PokeInfo["moves"])
-
+        #The toplevel is split up into 4 sections: Basic Pokemon information, Pokemon Moves, Pokemon picture, and Misc Info
         self.grid_rowconfigure(0, weight = 0)
         self.grid_rowconfigure(1, weight = 1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
-
+        
+        #Basic Info
         info = BasicInfo(self,PokeInfo)
         info.grid(row = 0, column=0, sticky="nsew")
 
+        #Picture
         Sprite = tk.Label(self, image=self.sprite3)
         Sprite.grid(row = 0, column=1, sticky="ne")
 
+        #Moves
         text = tk.Label(self, text = "MOVES")
         text.grid(row = 1, column=0, sticky="nsew")
-
+        
+        #Misc info
         text = tk.Label(self, text = "MISC INFO")
         text.grid(row = 1, column=1, sticky="nsew")
 
@@ -80,6 +88,7 @@ class BasicInfo(tk.Canvas):
         self.parent = parent
         self.pokeinfo = pokeinfo
         
+        #Rows are the text information, row2's are red seperator lines
         self.grid_columnconfigure(0, weight = 1)
         self.grid_rowconfigure(0, weight = 1, uniform="row")
         self.grid_rowconfigure(1, weight = 1, uniform="row2")
@@ -90,6 +99,7 @@ class BasicInfo(tk.Canvas):
         self.grid_rowconfigure(6, weight = 1, uniform="row")
         self.grid_rowconfigure(7, weight = 1, uniform="row2")
 
+        #Get generation number based on national dex number
         DexNumber = pokeinfo["id"]
         def getGeneration():
             if DexNumber <= 151:
@@ -113,22 +123,26 @@ class BasicInfo(tk.Canvas):
             else:
                 return "GEN XYZ"
 
+        #Get and format pokemon types from the info pulled from api and passed to BasicInfo
         typestring = ""
         if len(self.pokeinfo["types"]) == 1:
             typestring += self.pokeinfo["types"][0]["type"]["name"]
         else:
             typestring = self.pokeinfo["types"][0]["type"]["name"].capitalize() + "/" + self.pokeinfo["types"][1]["type"]["name"].capitalize()
         
+        #Format name, Dex number, type and generation string
         CharInfo1 = f"{self.pokeinfo["name"].capitalize()}      National Dex #: {self.pokeinfo["id"]}      Type: {typestring}      {getGeneration()}"
+        
+        #Write it out, give it a better font, and biggest size for a "title" like look, stiky it to the bottom left close to the line seperator
         text = tk.Label(self, text = CharInfo1, padx = 30)
         text.config(font=("Bahnschrift SemiBold", 20))
         text.grid(row = 0, column=0, sticky = 'sw')
-
+        #Line seperator, sticky it to the top close to the text
         line = lineSeperator(self, width=880, height=5)
         line.grid(row = 1, column=0, sticky = 'new')
 
-
-
+        #Getting evolution info is a bit more complicated bacuse it isnt directly in the pokemon info
+        #I need to pull the species info url from the pokemon info and then pull the evolution chain url from the species info
         @functools.cache
         def get_species_link():
             response = requests.get(pokeinfo["species"]["url"])
@@ -146,9 +160,12 @@ class BasicInfo(tk.Canvas):
             else:
                 print("error")
                 return None
-        
         evolutioninfo = get_evolution_info()
 
+        #Getting the evolution chain
+        #Right now uses a small recursive function to get the chain becasue the next pokemon in the evolution is inside the previous pokemon info here
+        #This works only for pokemon where the chain is 1 / 1->2 / 1->2->3
+        #This doesnt work and needs to be updated for pokemon like wurmple, eeevee, etc which have seperate chains
         def getChain(info):
             if(len(info["evolves_to"])==0):
                 return [info["species"]["name"]]
@@ -157,6 +174,7 @@ class BasicInfo(tk.Canvas):
             return [info["species"]["name"]] + getChain(info["evolves_to"][0])
         chain = getChain(evolutioninfo["chain"])
 
+        #Setup the string with the evolution chain
         chainstr = "Evolution Chain:  "
         if len(chain) == 1:
             chainstr += chain[0].capitalize()
@@ -167,15 +185,15 @@ class BasicInfo(tk.Canvas):
                 else:
                     chainstr += poke.capitalize() + "  "
 
+        #Write it out, give it a better font, and give it a smaller font than the "title", sticky it to the bottom left close to the line seperator
         text2 = tk.Label(self, text = chainstr, padx = 30)
         text2.grid(row = 2, column=0, sticky = 'sw')
         text2.config(font=("Bahnschrift SemiBold", 15))
-
+        #Line seperator, sticky it to the top close to the text
         line2 = lineSeperator(self, width=880, height=5)
         line2.grid(row = 3, column=0, sticky = 'new')
 
-
-
+        #Format the ability string with the info in pokeinfo
         abilitystring = ""
         for ability in pokeinfo["abilities"]:
             if ability["is_hidden"]:
@@ -183,36 +201,36 @@ class BasicInfo(tk.Canvas):
             abilitystring += ability["ability"]["name"].capitalize()
             abilitystring += ", "
 
+        #Write it out, give it a better font, and give it a smaller font than the "title", sticky it to the bottom left close to the line seperator
         text3 = tk.Label(self, text = f"Abilities: {abilitystring[:-2]}", padx = 30)
         text3.grid(row = 4, column=0, sticky = 'sw')
         text3.config(font=("Bahnschrift SemiBold", 15))
-
+        #Line seperator, sticky it to the top close to the text
         line3 = lineSeperator(self, width=880, height=5)
         line3.grid(row = 5, column=0, sticky = 'new')
 
 
-
+        #Get the individual stats and the total of all the stats from pokeinfo, the format the string
         individualstats = []
         stattotal = 0
         for stat in pokeinfo["stats"]:
             stattotal+=int(stat["base_stat"])
             individualstats.append(stat["base_stat"])
         statstring = f"Stat Total: {stattotal}      HP: {individualstats[0]},  ATK: {individualstats[1]},  DEF: {individualstats[2]},  SpATK: {individualstats[3]},  SpDEF: {individualstats[4]},  SPD: {individualstats[5]}"
-
+        #Write it out, give it a better font, and give it a smaller font than the "title", sticky it to the bottom left close to the line seperator
         text4 = tk.Label(self, text = statstring, padx = 30)
         text4.grid(row = 6, column=0, sticky = 'sw')
         text4.config(font=("Bahnschrift SemiBold", 15))
-
+        #Line seperator, sticky it to the top close to the text
         line4 = lineSeperator(self, width=880, height=5)
         line4.grid(row = 7, column=0, sticky = 'new')
 
-
+#Line seperator object, literally just a red line to be put under text to act as a section seperator of sorts
 class lineSeperator(tk.Canvas):
     def __init__(self, parent, *args, **kwargs):
         tk.Canvas.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.create_line(25, 3, 855, 3, fill="red", width=5)
-
 
 if __name__ == "__main__":
     print()
