@@ -74,8 +74,14 @@ class PokemonPage(tk.Toplevel):
         Sprite.grid(row = 0, column=1, sticky="ne")
 
         #Moves
-        text = tk.Label(self, text = "MOVES")
-        text.grid(row = 1, column=0, sticky="nsew")
+        #Made a border frame so i can easily see the frame where moves are shown
+        borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
+        borderframe.grid(row = 1, column=0, sticky="nsew", padx = 5, pady = 5)
+        borderframe.grid_columnconfigure(0, weight = 1)
+        borderframe.grid_rowconfigure(0, weight = 1)
+        #Actual moves scrollable
+        text = moves(borderframe, PokeInfo)
+        text.grid(row= 0, column = 0, sticky="nsew")
         
         #Misc info
         text = tk.Label(self, text = "MISC INFO")
@@ -231,6 +237,39 @@ class lineSeperator(tk.Canvas):
         tk.Canvas.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.create_line(25, 3, 855, 3, fill="red", width=5)
+
+class moves(tk.Frame):
+    def __init__(self, parent, pokeinfo, *args, **kargs):
+        tk.Frame.__init__(self, parent, *args, *kargs)
+        self.pokeinfo = pokeinfo
+        self.parent = parent
+
+        #Make a canvas to house Scrollbar and Scrollable contents
+        self.canvas = tk.Canvas(self, height = 280, width = 820)
+        self.canvas.grid(row=0, column=0, sticky="nsew",padx=10, pady=10)
+
+        #Make tk scrollbar
+        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scrollbar.grid(row= 0, column=1, sticky="ns")
+
+        #Configure scrollbar to stay in position based on where its scrolled
+        self.canvas.config(yscrollcommand=self.scrollbar.set)
+        
+        #Frame that houses all the moves
+        self.scrollable = tk.Frame(self.canvas)
+        self.canvas.create_window((0,0), window=self.scrollable, anchor="nw")
+
+        #Move Objects
+        self.count = 0
+        for row in self.pokeinfo["moves"]:
+            tk.Label(self.scrollable, text=row["move"]["name"].capitalize()).grid(row=self.count,column=0,pady=5,padx = 5)
+            self.count+=1
+
+        #Keeps the scrollable portion in the spot that its left in
+        def update_scroll(event):
+            self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        self.scrollable.bind("<Configure>", update_scroll)
+
 
 if __name__ == "__main__":
     print()
