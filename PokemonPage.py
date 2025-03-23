@@ -247,6 +247,8 @@ class moves(tk.Frame):
         #Make a canvas to house Scrollbar and Scrollable contents
         self.canvas = tk.Canvas(self, height = 280, width = 820)
         self.canvas.grid(row=0, column=0, sticky="nsew",padx=10, pady=10)
+        self.canvas.grid_rowconfigure(0, weight=1)
+        self.canvas.grid_columnconfigure(0, weight=1)
 
         #Make tk scrollbar
         self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
@@ -262,7 +264,7 @@ class moves(tk.Frame):
         #Move Objects
         self.count = 0
         for row in self.pokeinfo["moves"]:
-            tk.Label(self.scrollable, text=row["move"]["name"].capitalize()).grid(row=self.count,column=0,pady=5,padx = 5)
+            tk.Label(self.scrollable, text=row["move"]["name"].capitalize(),font=("Bahnschrift SemiBold", 10)).grid(row=self.count//5,column=self.count%5,pady=10,padx = 35, sticky = "we")
             self.count+=1
 
         #Keeps the scrollable portion in the spot that its left in
