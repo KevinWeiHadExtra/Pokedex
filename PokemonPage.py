@@ -141,7 +141,7 @@ class BasicInfo(tk.Canvas):
         #Get and format pokemon types from the info pulled from api and passed to BasicInfo
         typestring = ""
         if len(self.pokeinfo["types"]) == 1:
-            typestring += self.pokeinfo["types"][0]["type"]["name"]
+            typestring += self.pokeinfo["types"][0]["type"]["name"].capitalize()
         else:
             typestring = self.pokeinfo["types"][0]["type"]["name"].capitalize() + "/" + self.pokeinfo["types"][1]["type"]["name"].capitalize()
         
