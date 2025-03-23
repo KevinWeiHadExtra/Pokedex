@@ -91,7 +91,7 @@ class Start(tk.Frame):
         Footer.grid_rowconfigure(0, weight=1)
     
     #Test function currently in so I have easy access to the Pokemon page, bypassing the search function right now
-    def PokemonEntry(self, str = "gallade"):
+    def PokemonEntry(self, str = "goodra"):
         PokePage = PokemonPage(self, str)
         
 

@@ -84,8 +84,17 @@ class PokemonPage(tk.Toplevel):
         text.grid(row= 0, column = 0, sticky="nsew")
         
         #Misc info
-        text = tk.Label(self, text = "MISC INFO")
-        text.grid(row = 1, column=1, sticky="nsew")
+        #Again, could and should make a frame object, but the point is still there
+        text = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
+        text.grid(row = 1, column=1, sticky="nsew", padx = 5, pady = 5)
+        text.rowconfigure(0, weight=1)
+        text.rowconfigure(1, weight=1)
+        text.columnconfigure(0, weight=1)
+
+        text1 = tk.Label(text,font=("Bahnschrift SemiBold", 10), text= f"Standard Height: {PokeInfo["height"]/10} Meters")
+        text1.grid(row = 0)
+        text2 = tk.Label(text,font=("Bahnschrift SemiBold", 10), text = f"Standard Weight: {PokeInfo["weight"]/10} Kilograms")
+        text2.grid(row = 1)
 
 
 class BasicInfo(tk.Canvas):
