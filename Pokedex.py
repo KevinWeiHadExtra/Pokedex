@@ -34,6 +34,8 @@ class Pokedex(tk.Tk):
     
     #raise the selected frame
     def topPage(self, pagename):
+        if pagename == "Search":
+            self.pages[pagename].update_search_entry("bulbasaur")
         frame = self.pages[pagename]
         frame.tkraise()
 
@@ -74,7 +76,7 @@ class Start(tk.Frame):
         Searchbar.grid_columnconfigure(1, weight=1)
 
         #Searchbar
-        Bar = tk.Entry(Searchbar, width=75)
+        Bar = tk.Entry(Searchbar, width=75, font=("Bahnschrift SemiBold", 10))
         Bar.grid(row=0,column=0, columnspan=2)
 
         #Search Button
@@ -100,6 +102,8 @@ class Search(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.searchentry = tk.StringVar()
+
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -127,8 +131,85 @@ class Search(tk.Frame):
         borderframe.grid_columnconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(0, weight = 1)
 
+        searchframe = SearchFrame(borderframe, self.searchentry)
+        searchframe.grid(row = 0, column = 0, sticky="nsew")
+
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
+
+    def update_search_entry(self, entry):
+        self.searchentry = entry
+        
+class SearchFrame(tk.Frame):
+    def __init__(self, parent, searchentry):
+        tk.Frame.__init__(self, parent)
+        self.parent = parent
+        self.searchentry = searchentry
+        
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_columnconfigure(1, weight=1)
+
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_rowconfigure(2, weight=1)
+
+        #Searchbar
+        Bar = tk.Entry(self, width=85, font=("Bahnschrift SemiBold", 15))
+        Bar.grid(row=0,column=0, padx = 10, pady = 10)
+
+        Button = tk.Button(self, text = "Search", font=("Bahnschrift SemiBold", 10), width = 10)
+        Button.grid(row = 0, column = 1, sticky="we", padx=10, pady=10)
+
+        Seperator = tk.Frame(self, bg = "red", height = 2 )
+        Seperator.grid(row = 1, column=0, sticky="nsew", columnspan=2, padx = 5, pady = 5)
+
+        borderframe = tk.Frame(self)
+        borderframe.grid(row = 2, column=0, columnspan=2, sticky="nsew", padx = 5, pady = 5)
+        borderframe.grid_columnconfigure(0, weight = 1)
+        borderframe.grid_columnconfigure(1, weight = 1)
+        borderframe.grid_rowconfigure(0, weight = 1)
+        borderframe.grid_rowconfigure(1, weight = 1)
+        borderframe.grid_rowconfigure(2, weight = 1)
+
+        result1 = SearchResult(borderframe, "bulbasaur")
+        result1.grid(row=0,column=0,padx=20,pady=10, sticky = "nsew")
+        result1.grid_propagate(False)
+
+        result2 = SearchResult(borderframe, "bulbasaur")
+        result2.grid(row=0,column=1,padx=20,pady=10, sticky = "nsew")
+        result2.grid_propagate(False)
+
+        result3 = SearchResult(borderframe, "bulbasaur")
+        result3.grid(row=1,column=0,padx=20,pady=10, sticky = "nsew")
+        result3.grid_propagate(False)
+    
+    def test(self):
+        self.update()
+        print(self.result1.winfo_height())
+        print(self.result1.winfo_width())
+        
+    
+class SearchResult(tk.Frame):
+    def __init__(self, parent, pokemonname):
+        tk.Frame.__init__(self, parent, highlightbackground="black", highlightcolor="black", highlightthickness=2)
+        self.pokemoname = pokemonname
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+
+        Name = tk.Label(self, text = self.pokemoname.capitalize(), font=("Bahnschrift SemiBold", 15), width= 40, highlightbackground="black", highlightcolor="black", highlightthickness=2)
+        Name.grid(row = 0, column = 0, sticky="nsew", padx=5, pady=5)
+
+        Open = tk.Button(self, text = "Go", font=("Bahnschrift SemiBold", 10), width = 5, command = self.PokemonEntry)
+        Open.grid(row = 0, column = 1, sticky="we", padx=5, pady=5)
+    
+    def PokemonEntry(self):
+        PokePage = PokemonPage(self, self.pokemoname)
+        
 
 #Filter search Frame for getting a list of  results aligning with selected filters
 class AdvancedSearch(tk.Frame):
