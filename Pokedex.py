@@ -103,6 +103,7 @@ class Search(tk.Frame):
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
 
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=0)
@@ -110,21 +111,24 @@ class Search(tk.Frame):
         self.grid_rowconfigure(3, weight=0)
 
         Header = tk.Frame(self, bg = "red", height = 10 )
-        Header.grid(row = 0, column=0,sticky="nsew", columnspan=2)
+        Header.grid(row = 0, column=0,sticky="nsew", columnspan=3)
 
         Button = tk.Button(self, text = "<-- Start", font=("Bahnschrift SemiBold", 10), width = 20, command = lambda:self.controller.topPage("Start"))
         Button.grid(row = 1, column = 0, sticky="nw", padx=10, pady=10)
 
+        PageName = tk.Label(self, text = "Search", font=("Bahnschrift SemiBold", 15))
+        PageName.grid(row = 1, column = 1, sticky="we", padx=10, pady=10)
+
         Button = tk.Button(self, text = "Advanced Search -->", font=("Bahnschrift SemiBold", 10), width = 20, command = lambda:self.controller.topPage("AdvancedSearch"))
-        Button.grid(row = 1, column = 1, sticky="ne", padx=10, pady=10)
+        Button.grid(row = 1, column = 2, sticky="ne", padx=10, pady=10)
 
         borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
-        borderframe.grid(row = 2, column=0, columnspan=2, sticky="nsew", padx = 5, pady = 5)
+        borderframe.grid(row = 2, column=0, columnspan=3, sticky="nsew", padx = 5, pady = 5)
         borderframe.grid_columnconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(0, weight = 1)
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
-        Footer.grid(row = 3, column=0,sticky="nsew", columnspan=2)
+        Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
 #Filter search Frame for getting a list of  results aligning with selected filters
 class AdvancedSearch(tk.Frame):
@@ -132,8 +136,35 @@ class AdvancedSearch(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        label = tk.Label(self, text="Advanced Search Page")
-        label.grid(row=0, column=0)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=0)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=0)
+
+        Header = tk.Frame(self, bg = "red", height = 10 )
+        Header.grid(row = 0, column=0,sticky="nsew", columnspan=3)
+
+        Button = tk.Button(self, text = "<-- Search", font=("Bahnschrift SemiBold", 10), width = 20, command = lambda:self.controller.topPage("Search"))
+        Button.grid(row = 1, column = 0, sticky="nw", padx=10, pady=10)
+
+        PageName = tk.Label(self, text = "Advanced Search", font=("Bahnschrift SemiBold", 15))
+        PageName.grid(row = 1, column = 1, sticky="we", padx=10, pady=10)
+
+        Button = tk.Button(self, text = "Start -->", font=("Bahnschrift SemiBold", 10), width = 20, command = lambda:self.controller.topPage("Start"))
+        Button.grid(row = 1, column = 2, sticky="ne", padx=10, pady=10)
+
+        borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
+        borderframe.grid(row = 2, column=0, columnspan=3, sticky="nsew", padx = 5, pady = 5)
+        borderframe.grid_columnconfigure(0, weight = 1)
+        borderframe.grid_rowconfigure(0, weight = 1)
+
+        Footer = tk.Frame(self, bg = "red", height = 10 )
+        Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
+
 
 
 #Main, initialize Tk objects and loop
