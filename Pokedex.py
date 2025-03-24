@@ -25,9 +25,11 @@ class Pokedex(tk.Tk):
         self.pages = {}
         for page in (Start, Search, AdvancedSearch):
             pagename = page.__name__
+            print(pagename)
             frame = page(parent=rootwindow, controller=self)
             frame.grid(row=0, column=0, sticky="nsew")
             self.pages[pagename] = frame
+        print(len(self.pages))
         
         #Set the starting frame to Start
         self.topPage("Start")
@@ -78,7 +80,7 @@ class Start(tk.Frame):
         Bar.grid(row=0,column=0, columnspan=2)
 
         #Search Button
-        SearchButton = tk.Button(Searchbar, text = "Search", width=20)
+        SearchButton = tk.Button(Searchbar, text = "Search", width=20, command = lambda:self.controller.topPage("Search"))
         SearchButton.grid(row=1, column=0, sticky="ne", padx = 10)
 
         #Advanced Search button
@@ -101,8 +103,17 @@ class Search(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
+        
+        self.grid_rowconfigure(4, weight=1)
+
+        Header = tk.Frame(self, bg = "red", height = 5)
+        Header.grid(row = 0, column=0)
+
+        Button = tk.Button(self, text = "<-- Start", width = 20, command = lambda:self.controller.topPage("Start"))
+        Button.grid(row = 1, column = 0)
+
         label = tk.Label(self, text = "Search Page")
-        label.grid(row=0, column=0)
+        label.grid(row=2, column=0)
 
 #Filter search Frame for getting a list of  results aligning with selected filters
 class AdvancedSearch(tk.Frame):
