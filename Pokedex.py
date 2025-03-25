@@ -34,10 +34,15 @@ class Pokedex(tk.Tk):
     
     #raise the selected frame
     def topPage(self, pagename):
-        if pagename == "Search":
-            self.pages[pagename].update_search_entry("bulbasaur")
         frame = self.pages[pagename]
         frame.tkraise()
+
+    def passSearch(self, name):
+        print(name+"2")
+        self.pages["Search"].update_search_entry(name)
+
+    #def update(self):
+    #    self.update()
 
 #Starting frame
 class Start(tk.Frame):
@@ -75,12 +80,13 @@ class Start(tk.Frame):
         Searchbar.grid_columnconfigure(0, weight=1)
         Searchbar.grid_columnconfigure(1, weight=1)
 
+        self.usersearch = tk.StringVar()
         #Searchbar
-        Bar = tk.Entry(Searchbar, width=50, font=("Bahnschrift SemiBold", 15))
+        Bar = tk.Entry(Searchbar, width=50, font=("Bahnschrift SemiBold", 15), textvariable=self.usersearch)
         Bar.grid(row=0,column=0, columnspan=2)
 
         #Search Button
-        SearchButton = tk.Button(Searchbar, text = "Search", font=("Bahnschrift SemiBold", 10), width=20, command = lambda:self.controller.topPage("Search"))
+        SearchButton = tk.Button(Searchbar, text = "Search", font=("Bahnschrift SemiBold", 10), width=20, command = self.searchbutton)
         SearchButton.grid(row=1, column=0, sticky="ne", padx = 10)
 
         #Advanced Search button
@@ -92,6 +98,12 @@ class Start(tk.Frame):
         Footer.grid(row=3, column=0, sticky="nsew")
         Footer.grid_rowconfigure(0, weight=1)
     
+    def searchbutton(self):
+        print(self.usersearch.get()+"1")
+        self.controller.topPage("Search")
+        self.controller.passSearch(self.usersearch.get())
+
+
     #Test function currently in so I have easy access to the Pokemon page, bypassing the search function right now
     def PokemonEntry(self, str = "goodra"):
         PokePage = PokemonPage(self, str)
@@ -103,7 +115,6 @@ class Search(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.searchentry = tk.StringVar()
-        self.searchentry.set("bulbasaur")
 
 
         self.grid_columnconfigure(0, weight=1)
@@ -132,20 +143,27 @@ class Search(tk.Frame):
         borderframe.grid_columnconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(0, weight = 1)
 
-        searchframe = SearchFrame(borderframe, self.searchentry.get())
-        searchframe.grid(row = 0, column = 0, sticky="nsew")
+        self.searchframe = SearchFrame(borderframe, self.searchentry.get())
+        self.searchframe.grid(row = 0, column = 0, sticky="nsew")
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
     def update_search_entry(self, entry):
-        self.searchentry = entry
+        print(entry+"3")
+        self.searchentry.set(entry)
+        print(self.searchentry.get())
+        self.searchframe.destroy()
+        self.searchframe = SearchFrame(self.searchframe.master, self.searchentry.get())
+        self.searchframe.grid(row = 0, column = 0, sticky="nsew")
+        #self.controller.update()
         
 class SearchFrame(tk.Frame):
     def __init__(self, parent, searchentry):
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.searchentry = searchentry
+        print(self.searchentry+"4")
         
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
@@ -173,7 +191,7 @@ class SearchFrame(tk.Frame):
         borderframe.grid_rowconfigure(2, weight = 1)
         
         if searchentry != "":
-            searchresults = ["gallade"]
+            searchresults = []
             searchresults.append(searchentry)
             count = 0
             results = []
@@ -184,11 +202,6 @@ class SearchFrame(tk.Frame):
                 results.append(box)
                 count+=1
     
-    def test(self):
-        self.update()
-        print(self.result1.winfo_height())
-        print(self.result1.winfo_width())
-        
     
 class SearchResult(tk.Frame):
     def __init__(self, parent, pokemonname):
