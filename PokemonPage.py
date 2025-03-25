@@ -48,7 +48,6 @@ class PokemonPage(tk.Toplevel):
         def getImage():
             response = requests.get(imageURL)
             if response.status_code == 200:
-                print("Got")
                 image = Image.open(BytesIO(response.content))
                 return image
             else:

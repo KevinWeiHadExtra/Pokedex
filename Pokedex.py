@@ -76,7 +76,7 @@ class Start(tk.Frame):
         Searchbar.grid_columnconfigure(1, weight=1)
 
         #Searchbar
-        Bar = tk.Entry(Searchbar, width=75, font=("Bahnschrift SemiBold", 10))
+        Bar = tk.Entry(Searchbar, width=50, font=("Bahnschrift SemiBold", 15))
         Bar.grid(row=0,column=0, columnspan=2)
 
         #Search Button
@@ -103,6 +103,7 @@ class Search(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.searchentry = tk.StringVar()
+        self.searchentry.set("bulbasaur")
 
 
         self.grid_columnconfigure(0, weight=1)
@@ -131,7 +132,7 @@ class Search(tk.Frame):
         borderframe.grid_columnconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(0, weight = 1)
 
-        searchframe = SearchFrame(borderframe, self.searchentry)
+        searchframe = SearchFrame(borderframe, self.searchentry.get())
         searchframe.grid(row = 0, column = 0, sticky="nsew")
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
@@ -170,18 +171,18 @@ class SearchFrame(tk.Frame):
         borderframe.grid_rowconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(1, weight = 1)
         borderframe.grid_rowconfigure(2, weight = 1)
-
-        result1 = SearchResult(borderframe, "bulbasaur")
-        result1.grid(row=0,column=0,padx=20,pady=10, sticky = "nsew")
-        result1.grid_propagate(False)
-
-        result2 = SearchResult(borderframe, "bulbasaur")
-        result2.grid(row=0,column=1,padx=20,pady=10, sticky = "nsew")
-        result2.grid_propagate(False)
-
-        result3 = SearchResult(borderframe, "bulbasaur")
-        result3.grid(row=1,column=0,padx=20,pady=10, sticky = "nsew")
-        result3.grid_propagate(False)
+        
+        if searchentry != "":
+            searchresults = ["gallade"]
+            searchresults.append(searchentry)
+            count = 0
+            results = []
+            for i in searchresults:
+                box = SearchResult(borderframe, i)
+                box.grid(row=count//2,column=count%2,padx=20,pady=10, sticky = "nsew")
+                box.grid_propagate(False)
+                results.append(box)
+                count+=1
     
     def test(self):
         self.update()
@@ -193,6 +194,7 @@ class SearchResult(tk.Frame):
     def __init__(self, parent, pokemonname):
         tk.Frame.__init__(self, parent, highlightbackground="black", highlightcolor="black", highlightthickness=2)
         self.pokemoname = pokemonname
+
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -206,6 +208,7 @@ class SearchResult(tk.Frame):
 
         Open = tk.Button(self, text = "Go", font=("Bahnschrift SemiBold", 10), width = 5, command = self.PokemonEntry)
         Open.grid(row = 0, column = 1, sticky="we", padx=5, pady=5)
+
     
     def PokemonEntry(self):
         PokePage = PokemonPage(self, self.pokemoname)
