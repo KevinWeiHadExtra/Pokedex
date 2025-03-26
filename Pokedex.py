@@ -1,6 +1,8 @@
 import tkinter as tk
+import json
 from PIL import ImageTk, Image
 from PokemonPage import PokemonPage
+from difflib import SequenceMatcher
 
 #Main Tk objects
 class Pokedex(tk.Tk):
@@ -114,7 +116,6 @@ class Search(tk.Frame):
         self.controller = controller
         self.searchentry = tk.StringVar()
 
-
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
@@ -186,6 +187,10 @@ class SearchFrame(tk.Frame):
         self.borderframe.grid_rowconfigure(1, weight = 1)
         self.borderframe.grid_rowconfigure(2, weight = 1)
         
+
+
+
+
         
         self.searchresults = []
         if self.searchentry.get() != "":
@@ -200,6 +205,7 @@ class SearchFrame(tk.Frame):
             count+=1
     
     def updatesearch(self):
+        self.get6results(self.searchentry.get())
         self.searchresults = []
         self.searchresults.append(self.searchentry.get())
         counter = 0
@@ -212,7 +218,6 @@ class SearchFrame(tk.Frame):
                     box.grid_propagate(False)
                     i = box
                     counter+=1
-                    print(1)
         else:
             count = 0
             for i in self.searchresults:
@@ -221,10 +226,37 @@ class SearchFrame(tk.Frame):
                 box.grid_propagate(False)
                 self.results.append(box)
                 count+=1
-            print(2)
+
+    def get6results(self, searched):
+        with open('AllPokemon.json', 'r') as file:
+            AllPokemon = file.read()
+            AllPokemondict = json.loads(AllPokemon)
+
+        pokemonNames = {}
+        counter = 0
+        for pokemon in AllPokemondict['results']:
+            similarity = SequenceMatcher(None, searched.casefold(), pokemon['name'].casefold()).ratio()
+            if counter < 6:
+                pokemonNames[pokemon['name']] = similarity
+                sorted_dict = sorted(pokemonNames.items(), key=lambda item: item[1])
+                pokemonNames = dict(sorted_dict)
+                counter+=1
+            elif counter == 6:
+                first = next(iter(pokemonNames))
+                if pokemonNames[first] < similarity:
+                    pokemonNames[pokemon['name']] = similarity
+                    pokemonNames.pop(first)
+                    sorted_dict = sorted(pokemonNames.items(), key=lambda item: item[1])
+                    pokemonNames = dict(sorted_dict)
+        print(pokemonNames)
+
+
+
+                
     
     
 class SearchResult(tk.Frame):
+
     def __init__(self, parent, pokemonname):
         tk.Frame.__init__(self, parent, highlightbackground="black", highlightcolor="black", highlightthickness=2)
         self.pokemoname = pokemonname
