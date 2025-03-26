@@ -38,7 +38,6 @@ class Pokedex(tk.Tk):
         frame.tkraise()
 
     def passSearch(self, name):
-        print(name+"2")
         self.pages["Search"].update_search_entry(name)
 
     #def update(self):
@@ -99,7 +98,6 @@ class Start(tk.Frame):
         Footer.grid_rowconfigure(0, weight=1)
     
     def searchbutton(self):
-        print(self.usersearch.get()+"1")
         self.controller.topPage("Search")
         self.controller.passSearch(self.usersearch.get())
 
@@ -150,9 +148,7 @@ class Search(tk.Frame):
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
     def update_search_entry(self, entry):
-        print(entry+"3")
         self.searchentry.set(entry)
-        print(self.searchentry.get())
         self.searchframe.destroy()
         self.searchframe = SearchFrame(self.searchframe.master, self.searchentry.get())
         self.searchframe.grid(row = 0, column = 0, sticky="nsew")
@@ -162,8 +158,8 @@ class SearchFrame(tk.Frame):
     def __init__(self, parent, searchentry):
         tk.Frame.__init__(self, parent)
         self.parent = parent
-        self.searchentry = searchentry
-        print(self.searchentry+"4")
+        self.searchentry = tk.StringVar()
+        self.searchentry.set(searchentry)
         
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=1)
@@ -173,34 +169,59 @@ class SearchFrame(tk.Frame):
         self.grid_rowconfigure(2, weight=1)
 
         #Searchbar
-        Bar = tk.Entry(self, width=85, font=("Bahnschrift SemiBold", 15))
+        Bar = tk.Entry(self, width=85, font=("Bahnschrift SemiBold", 15), textvariable=self.searchentry)
         Bar.grid(row=0,column=0, padx = 10, pady = 10)
 
-        Button = tk.Button(self, text = "Search", font=("Bahnschrift SemiBold", 10), width = 10)
+        Button = tk.Button(self, text = "Search", font=("Bahnschrift SemiBold", 10), width = 10, command=self.updatesearch)
         Button.grid(row = 0, column = 1, sticky="we", padx=10, pady=10)
 
         Seperator = tk.Frame(self, bg = "red", height = 2 )
         Seperator.grid(row = 1, column=0, sticky="nsew", columnspan=2, padx = 5, pady = 5)
 
-        borderframe = tk.Frame(self)
-        borderframe.grid(row = 2, column=0, columnspan=2, sticky="nsew", padx = 5, pady = 5)
-        borderframe.grid_columnconfigure(0, weight = 1)
-        borderframe.grid_columnconfigure(1, weight = 1)
-        borderframe.grid_rowconfigure(0, weight = 1)
-        borderframe.grid_rowconfigure(1, weight = 1)
-        borderframe.grid_rowconfigure(2, weight = 1)
+        self.borderframe = tk.Frame(self)
+        self.borderframe.grid(row = 2, column=0, columnspan=2, sticky="nsew", padx = 5, pady = 5)
+        self.borderframe.grid_columnconfigure(0, weight = 1)
+        self.borderframe.grid_columnconfigure(1, weight = 1)
+        self.borderframe.grid_rowconfigure(0, weight = 1)
+        self.borderframe.grid_rowconfigure(1, weight = 1)
+        self.borderframe.grid_rowconfigure(2, weight = 1)
         
-        if searchentry != "":
-            searchresults = []
-            searchresults.append(searchentry)
+        
+        self.searchresults = []
+        if self.searchentry.get() != "":
+            self.searchresults.append(self.searchentry.get())
+        count = 0
+        self.results = []
+        for i in self.searchresults:
+            box = SearchResult(self.borderframe, i)
+            box.grid(row=count//2,column=count%2,padx=20,pady=10, sticky = "nsew")
+            box.grid_propagate(False)
+            self.results.append(box)
+            count+=1
+    
+    def updatesearch(self):
+        self.searchresults = []
+        self.searchresults.append(self.searchentry.get())
+        counter = 0
+        if len(self.results) > 0 :
+            for i,y in zip(self.results,self.searchresults):
+                i.destroy()
+                if y != "":
+                    box = SearchResult(self.borderframe, y)
+                    box.grid(row=counter//2,column=counter%2,padx=20,pady=10, sticky = "nsew")
+                    box.grid_propagate(False)
+                    i = box
+                    counter+=1
+                    print(1)
+        else:
             count = 0
-            results = []
-            for i in searchresults:
-                box = SearchResult(borderframe, i)
+            for i in self.searchresults:
+                box = SearchResult(self.borderframe, i)
                 box.grid(row=count//2,column=count%2,padx=20,pady=10, sticky = "nsew")
                 box.grid_propagate(False)
-                results.append(box)
+                self.results.append(box)
                 count+=1
+            print(2)
     
     
 class SearchResult(tk.Frame):
