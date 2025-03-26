@@ -187,14 +187,7 @@ class SearchFrame(tk.Frame):
         self.borderframe.grid_rowconfigure(1, weight = 1)
         self.borderframe.grid_rowconfigure(2, weight = 1)
         
-
-
-
-
-        
-        self.searchresults = []
-        if self.searchentry.get() != "":
-            self.searchresults.append(self.searchentry.get())
+        self.searchresults = self.get6results(self.searchentry.get())
         count = 0
         self.results = []
         for i in self.searchresults:
@@ -205,21 +198,32 @@ class SearchFrame(tk.Frame):
             count+=1
     
     def updatesearch(self):
-        self.get6results(self.searchentry.get())
-        self.searchresults = []
-        self.searchresults.append(self.searchentry.get())
+        self.searchresults = self.get6results(self.searchentry.get())
         counter = 0
+        print(len(self.results))
+        print(len(self.searchresults))
         if len(self.results) > 0 :
-            for i,y in zip(self.results,self.searchresults):
-                i.destroy()
-                if y != "":
-                    box = SearchResult(self.borderframe, y)
-                    box.grid(row=counter//2,column=counter%2,padx=20,pady=10, sticky = "nsew")
-                    box.grid_propagate(False)
-                    i = box
-                    counter+=1
+            print("made it")
+            if len(self.searchresults) == 0:
+                print("made it 2")
+                for i in self.results:
+                    print("made it 3")
+                    i.destroy()
+                    print(len(self.results))
+            else:
+                newsearches = []
+                for i,y in zip(self.results,self.searchresults):
+                    i.destroy()
+                    if y != "":
+                        box = SearchResult(self.borderframe, y)
+                        box.grid(row=counter//2,column=counter%2,padx=20,pady=10, sticky = "nsew")
+                        box.grid_propagate(False)
+                        newsearches.append(box)
+                        counter+=1
+                self.results = newsearches
         else:
             count = 0
+            print("empty")
             for i in self.searchresults:
                 box = SearchResult(self.borderframe, i)
                 box.grid(row=count//2,column=count%2,padx=20,pady=10, sticky = "nsew")
@@ -228,27 +232,31 @@ class SearchFrame(tk.Frame):
                 count+=1
 
     def get6results(self, searched):
-        with open('AllPokemon.json', 'r') as file:
-            AllPokemon = file.read()
-            AllPokemondict = json.loads(AllPokemon)
-
+        justNames = []
         pokemonNames = {}
-        counter = 0
-        for pokemon in AllPokemondict['results']:
-            similarity = SequenceMatcher(None, searched.casefold(), pokemon['name'].casefold()).ratio()
-            if counter < 6:
-                pokemonNames[pokemon['name']] = similarity
-                sorted_dict = sorted(pokemonNames.items(), key=lambda item: item[1])
-                pokemonNames = dict(sorted_dict)
-                counter+=1
-            elif counter == 6:
-                first = next(iter(pokemonNames))
-                if pokemonNames[first] < similarity:
+        if searched != "":
+            with open('AllPokemon.json', 'r') as file:
+                AllPokemon = file.read()
+                AllPokemondict = json.loads(AllPokemon)
+            counter = 0
+            for pokemon in AllPokemondict['results']:
+                similarity = SequenceMatcher(None, searched.casefold(), pokemon['name'].casefold()).ratio()
+                if counter < 6:
                     pokemonNames[pokemon['name']] = similarity
-                    pokemonNames.pop(first)
                     sorted_dict = sorted(pokemonNames.items(), key=lambda item: item[1])
                     pokemonNames = dict(sorted_dict)
-        print(pokemonNames)
+                    counter+=1
+                elif counter == 6:
+                    first = next(iter(pokemonNames))
+                    if pokemonNames[first] < similarity:
+                        pokemonNames[pokemon['name']] = similarity
+                        pokemonNames.pop(first)
+                        sorted_dict = sorted(pokemonNames.items(), key=lambda item: item[1])
+                        pokemonNames = dict(sorted_dict)
+            justNames = list(pokemonNames.keys())
+            justNames.reverse()
+        print(justNames)
+        return justNames
 
 
 
