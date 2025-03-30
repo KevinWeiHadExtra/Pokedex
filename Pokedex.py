@@ -91,7 +91,7 @@ class Start(tk.Frame):
         SearchButton.grid(row=1, column=0, sticky="ne", padx = 10)
 
         #Advanced Search button
-        AdvancedSearchButton = tk.Button(Searchbar, text = "Advanced Search[TEST RN]", font=("Bahnschrift SemiBold", 10), width=20, command=self.PokemonEntry)
+        AdvancedSearchButton = tk.Button(Searchbar, text = "Advanced Search", font=("Bahnschrift SemiBold", 10), width=20, command=self.filterbutton)
         AdvancedSearchButton.grid(row = 1, column=1, sticky="nw", padx = 10)
         
         #Red Footer
@@ -102,6 +102,9 @@ class Start(tk.Frame):
     def searchbutton(self):
         self.controller.topPage("Search")
         self.controller.passSearch(self.usersearch.get())
+
+    def filterbutton(self):
+        self.controller.topPage("AdvancedSearch")
 
 
     #Test function currently in so I have easy access to the Pokemon page, bypassing the search function right now
