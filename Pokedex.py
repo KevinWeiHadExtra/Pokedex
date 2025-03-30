@@ -1,4 +1,5 @@
 import tkinter as tk
+import requests
 import json
 from PIL import ImageTk, Image
 from PokemonPage import PokemonPage
@@ -379,8 +380,31 @@ class AdvancedSearch(tk.Frame):
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
     def getFilters(self):
-        print(self.Generations.getType())
-        print(self.Type.getType())
+        genList = self.Generations.getGen()
+        type = self.Type.getType()
+        genPokemon = []
+        typePokemon = []
+        for gen, yes in enumerate(genList):
+            if yes == 1:
+                url = f"https://pokeapi.co/api/v2/generation/{gen+1}/"
+                response = requests.get(url)
+                data = response.json()
+                for i in data["pokemon_species"]:
+                    genPokemon.append(i["name"])
+        
+        typeurl = "https://pokeapi.co/api/v2/type/" + type + "/"
+        typeresponse = requests.get(typeurl)
+        typedata = typeresponse.json()
+        for x in typedata["pokemon"]:
+            typePokemon.append(x["pokemon"]["name"])
+        
+        filtered = set(typePokemon).intersection(set(genPokemon))
+        return filtered
+        
+                
+                
+
+
 
 class GenCheck(tk.Frame):
     def __init__(self, parent):
@@ -422,7 +446,7 @@ class GenCheck(tk.Frame):
         tk.Checkbutton(self, text="Generation 9:    Paldea", variable=self.Gen9, font=("Bahnschrift SemiBold", 12)).grid(row=16, sticky="nsw", pady = 5, padx = 5)
         tk.Label(self, text = "Pokemon Scarlet, Pokemon Violet, Pokemon Legends Z-A", font=("Bahnschrift SemiBold", 8)).grid(row=17, sticky="nsw", pady = 5, padx = 5)
     
-    def getType(self):
+    def getGen(self):
         return [self.Gen1.get(), self.Gen2.get(), self.Gen3.get(), self.Gen4.get(), self.Gen5.get(), self.Gen6.get(), self.Gen7.get(), self.Gen8.get(), self.Gen9.get()]
 
 
@@ -471,41 +495,41 @@ class TypeCheck(tk.Frame):
             case 0:
                 return ""
             case 1:
-                return "Fire"
+                return "fire"
             case 2:
-                return "Water"
+                return "fater"
             case 3:
-                return "Grass"
+                return "grass"
             case 4:
-                return "Electric"
+                return "electric"
             case 5:
-                return "Psychic"
+                return "psychic"
             case 6:
-                return "Ice"
+                return "ice"
             case 7:
-                return "Dragon"
+                return "dragon"
             case 8:
-                return "Dark"
+                return "dark"
             case 9:
-                return "Fairy"
+                return "fairy"
             case 10:
-                return "Normal"
+                return "normal"
             case 11:
-                return "Fighting"
+                return "fighting"
             case 12:
-                return "Flying"
+                return "flying"
             case 13:
-                return "Poison"
+                return "poison"
             case 14:
-                return "Ground"
+                return "ground"
             case 15:
-                return "Rock"
+                return "rock"
             case 16:
-                return "Bug"
+                return "rug"
             case 17:
-                return "Ghost"
+                return "ghost"
             case 18:
-                return "Steel"
+                return "steel"
 
 #Main, initialize Tk objects and loop
 if __name__ == "__main__":
