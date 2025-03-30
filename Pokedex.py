@@ -362,7 +362,11 @@ class AdvancedSearch(tk.Frame):
         borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         borderframe.grid(row = 2, column=0, columnspan=3, sticky="nsew", padx = 5, pady = 5)
         borderframe.grid_columnconfigure(0, weight = 1)
+        borderframe.grid_columnconfigure(2, weight = 1)
         borderframe.grid_rowconfigure(0, weight = 1)
+
+        Generations = GenCheck(borderframe)
+        Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5)
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
@@ -380,6 +384,15 @@ class GenCheck(tk.Frame):
         Gen7 = tk.IntVar()
         Gen8 = tk.IntVar()
         Gen9 = tk.IntVar()
+        tk.Checkbutton(self, text="Generation 1", variable=Gen1, font=("Bahnschrift SemiBold", 15)).grid(row=0, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 2", variable=Gen2, font=("Bahnschrift SemiBold", 15)).grid(row=1, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 3", variable=Gen3, font=("Bahnschrift SemiBold", 15)).grid(row=2, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 4", variable=Gen4, font=("Bahnschrift SemiBold", 15)).grid(row=3, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 5", variable=Gen5, font=("Bahnschrift SemiBold", 15)).grid(row=4, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 6", variable=Gen6, font=("Bahnschrift SemiBold", 15)).grid(row=5, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 7", variable=Gen7, font=("Bahnschrift SemiBold", 15)).grid(row=6, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 8", variable=Gen8, font=("Bahnschrift SemiBold", 15)).grid(row=7, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 9", variable=Gen9, font=("Bahnschrift SemiBold", 15)).grid(row=8, sticky="nsew", pady = 5, padx = 5)
 
 class TypeCheck(tk.Frame):
     def __init__(self, parent):
