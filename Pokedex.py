@@ -366,17 +366,21 @@ class AdvancedSearch(tk.Frame):
         borderframe.grid_rowconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(1, weight = 1)
 
-        Generations = GenCheck(borderframe)
-        Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5, rowspan=2)
+        self.Generations = GenCheck(borderframe)
+        self.Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5, rowspan=2)
 
-        Type = TypeCheck(borderframe)
-        Type.grid(row=0,column=1, sticky="nsew", padx = 5, pady = 5)
+        self.Type = TypeCheck(borderframe)
+        self.Type.grid(row=0,column=1, sticky="nsew", padx = 5, pady = 5)
 
-        FilterButton = tk.Button(borderframe, text = "Filter Search", font=("Bahnschrift SemiBold", 15), width = 20)
+        FilterButton = tk.Button(borderframe, text = "Filter Search", font=("Bahnschrift SemiBold", 15), width = 20, command=self.getFilters)
         FilterButton.grid(row = 1, column=1, padx = 5, pady = 5)
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
+
+    def getFilters(self):
+        print(self.Generations.getType())
+        print(self.Type.getType())
 
 class GenCheck(tk.Frame):
     def __init__(self, parent):
@@ -417,6 +421,9 @@ class GenCheck(tk.Frame):
 
         tk.Checkbutton(self, text="Generation 9:    Paldea", variable=self.Gen9, font=("Bahnschrift SemiBold", 12)).grid(row=16, sticky="nsw", pady = 5, padx = 5)
         tk.Label(self, text = "Pokemon Scarlet, Pokemon Violet, Pokemon Legends Z-A", font=("Bahnschrift SemiBold", 8)).grid(row=17, sticky="nsw", pady = 5, padx = 5)
+    
+    def getType(self):
+        return [self.Gen1.get(), self.Gen2.get(), self.Gen3.get(), self.Gen4.get(), self.Gen5.get(), self.Gen6.get(), self.Gen7.get(), self.Gen8.get(), self.Gen9.get()]
 
 
 class TypeCheck(tk.Frame):
@@ -425,7 +432,7 @@ class TypeCheck(tk.Frame):
         self.parent = parent
 
         self.Type = tk.IntVar()
-        self.Type.set(0)
+        self.Type.set(1)
 
         self.grid_columnconfigure(0, weight=1, uniform="1")
         self.grid_columnconfigure(1, weight=1, uniform="1")
@@ -458,9 +465,47 @@ class TypeCheck(tk.Frame):
         tk.Radiobutton(self, text = "Bug", variable=self.Type, value=16, font=("Bahnschrift SemiBold", 12)).grid(row = 7, column=1, padx = 5, pady = 5, sticky="nsw")
         tk.Radiobutton(self, text = "Ghost", variable=self.Type, value=17, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=0, padx = 5, pady = 5, sticky="nsw")
         tk.Radiobutton(self, text = "Steel", variable=self.Type, value=18, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=1, padx = 5, pady = 5, sticky="nsw")
-
-
-
+    
+    def getType(self):
+        match self.Type.get():
+            case 0:
+                return ""
+            case 1:
+                return "Fire"
+            case 2:
+                return "Water"
+            case 3:
+                return "Grass"
+            case 4:
+                return "Electric"
+            case 5:
+                return "Psychic"
+            case 6:
+                return "Ice"
+            case 7:
+                return "Dragon"
+            case 8:
+                return "Dark"
+            case 9:
+                return "Fairy"
+            case 10:
+                return "Normal"
+            case 11:
+                return "Fighting"
+            case 12:
+                return "Flying"
+            case 13:
+                return "Poison"
+            case 14:
+                return "Ground"
+            case 15:
+                return "Rock"
+            case 16:
+                return "Bug"
+            case 17:
+                return "Ghost"
+            case 18:
+                return "Steel"
 
 #Main, initialize Tk objects and loop
 if __name__ == "__main__":
