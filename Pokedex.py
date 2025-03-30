@@ -367,6 +367,26 @@ class AdvancedSearch(tk.Frame):
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
+class GenCheck(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
+        self.parent = parent
+        Gen1 = tk.IntVar()
+        Gen2 = tk.IntVar()
+        Gen3 = tk.IntVar()
+        Gen4 = tk.IntVar()
+        Gen5 = tk.IntVar()
+        Gen6 = tk.IntVar()
+        Gen7 = tk.IntVar()
+        Gen8 = tk.IntVar()
+        Gen9 = tk.IntVar()
+
+class TypeCheck(tk.Frame):
+    def __init__(self, parent):
+        tk.Frame.__init__(self, parent)
+        self.parent = parent
+
+
 
 
 #Main, initialize Tk objects and loop
