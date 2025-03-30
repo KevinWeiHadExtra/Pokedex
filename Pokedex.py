@@ -361,19 +361,23 @@ class AdvancedSearch(tk.Frame):
 
         borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         borderframe.grid(row = 2, column=0, columnspan=3, sticky="nsew", padx = 5, pady = 5)
-        borderframe.grid_columnconfigure(0, weight = 1)
-        borderframe.grid_columnconfigure(2, weight = 1)
+        borderframe.grid_columnconfigure(0, weight = 1, uniform="col")
+        borderframe.grid_columnconfigure(1, weight = 1, uniform="col")
         borderframe.grid_rowconfigure(0, weight = 1)
+        borderframe.grid_rowconfigure(1, weight = 1)
 
         Generations = GenCheck(borderframe)
-        Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5)
+        Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5, rowspan=2)
+
+        Type = TypeCheck(borderframe)
+        Type.grid(row=0,column=1, sticky="nsew", padx = 5, pady = 5)
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
 class GenCheck(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         self.parent = parent
         Gen1 = tk.IntVar()
         Gen2 = tk.IntVar()
@@ -414,8 +418,43 @@ class GenCheck(tk.Frame):
 
 class TypeCheck(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         self.parent = parent
+
+        self.Type = tk.IntVar()
+        self.Type.set(0)
+
+        self.grid_columnconfigure(0, weight=1, uniform="1")
+        self.grid_columnconfigure(1, weight=1, uniform="1")
+
+        self.grid_rowconfigure(0, weight=1, uniform="2")
+        self.grid_rowconfigure(1, weight=1, uniform="2")
+        self.grid_rowconfigure(2, weight=1, uniform="2")
+        self.grid_rowconfigure(3, weight=1, uniform="2")
+        self.grid_rowconfigure(4, weight=1, uniform="2")
+        self.grid_rowconfigure(5, weight=1, uniform="2")
+        self.grid_rowconfigure(6, weight=1, uniform="2")
+        self.grid_rowconfigure(7, weight=1, uniform="2")
+        self.grid_rowconfigure(8, weight=1, uniform="2")
+
+        tk.Radiobutton(self, text = "Fire", variable=self.Type, value=1, font=("Bahnschrift SemiBold", 12)).grid(row = 0, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Water", variable=self.Type, value=2, font=("Bahnschrift SemiBold", 12)).grid(row = 0, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Grass", variable=self.Type, value=3, font=("Bahnschrift SemiBold", 12)).grid(row = 1, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Electric", variable=self.Type, value=4, font=("Bahnschrift SemiBold", 12)).grid(row = 1, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Psychic", variable=self.Type, value=5, font=("Bahnschrift SemiBold", 12)).grid(row = 2, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Ice", variable=self.Type, value=6, font=("Bahnschrift SemiBold", 12)).grid(row = 2, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Dragon", variable=self.Type, value=7, font=("Bahnschrift SemiBold", 12)).grid(row = 3, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Dark", variable=self.Type, value=8, font=("Bahnschrift SemiBold", 12)).grid(row = 3, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Fairy", variable=self.Type, value=9, font=("Bahnschrift SemiBold", 12)).grid(row = 4, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Normal", variable=self.Type, value=10, font=("Bahnschrift SemiBold", 12)).grid(row = 4, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Fighting", variable=self.Type, value=11, font=("Bahnschrift SemiBold", 12)).grid(row = 5, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Flying", variable=self.Type, value=12, font=("Bahnschrift SemiBold", 12)).grid(row = 5, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Poison", variable=self.Type, value=13, font=("Bahnschrift SemiBold", 12)).grid(row = 6, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Ground", variable=self.Type, value=14, font=("Bahnschrift SemiBold", 12)).grid(row = 6, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Rock", variable=self.Type, value=15, font=("Bahnschrift SemiBold", 12)).grid(row = 7, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Bug", variable=self.Type, value=16, font=("Bahnschrift SemiBold", 12)).grid(row = 7, column=1, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Ghost", variable=self.Type, value=17, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=0, padx = 5, pady = 5, sticky="nsw")
+        tk.Radiobutton(self, text = "Steel", variable=self.Type, value=18, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=1, padx = 5, pady = 5, sticky="nsw")
 
 
 
