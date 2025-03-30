@@ -384,15 +384,33 @@ class GenCheck(tk.Frame):
         Gen7 = tk.IntVar()
         Gen8 = tk.IntVar()
         Gen9 = tk.IntVar()
-        tk.Checkbutton(self, text="Generation 1", variable=Gen1, font=("Bahnschrift SemiBold", 15)).grid(row=0, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 2", variable=Gen2, font=("Bahnschrift SemiBold", 15)).grid(row=1, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 3", variable=Gen3, font=("Bahnschrift SemiBold", 15)).grid(row=2, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 4", variable=Gen4, font=("Bahnschrift SemiBold", 15)).grid(row=3, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 5", variable=Gen5, font=("Bahnschrift SemiBold", 15)).grid(row=4, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 6", variable=Gen6, font=("Bahnschrift SemiBold", 15)).grid(row=5, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 7", variable=Gen7, font=("Bahnschrift SemiBold", 15)).grid(row=6, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 8", variable=Gen8, font=("Bahnschrift SemiBold", 15)).grid(row=7, sticky="nsew", pady = 5, padx = 5)
-        tk.Checkbutton(self, text="Generation 9", variable=Gen9, font=("Bahnschrift SemiBold", 15)).grid(row=8, sticky="nsew", pady = 5, padx = 5)
+        tk.Checkbutton(self, text="Generation 1:    Kanto", variable=Gen1, font=("Bahnschrift SemiBold", 12)).grid(row=0, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Red, Pokemon Blue, Pokemon Yellow", font=("Bahnschrift SemiBold", 8)).grid(row=1, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 2:    Johto", variable=Gen2, font=("Bahnschrift SemiBold", 12)).grid(row=2, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Gold, Pokemon Silver, Pokemon Crystal", font=("Bahnschrift SemiBold", 8)).grid(row=3, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 3:    Hoenn", variable=Gen3, font=("Bahnschrift SemiBold", 12)).grid(row=4, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Ruby, Pokemon Sapphire, Pokemon Emerald, Pokemon FireRed, Pokemon LeafGreen", font=("Bahnschrift SemiBold", 8)).grid(row=5, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 4:    Sinnoh", variable=Gen4, font=("Bahnschrift SemiBold", 12)).grid(row=6, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Diamond, Pokemon Pearl, Pokemon Platinum, Pokemon HeartGold, Pokemon SoulSilver", font=("Bahnschrift SemiBold", 8)).grid(row=7, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 5:    Unova", variable=Gen5, font=("Bahnschrift SemiBold", 12)).grid(row=8, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Black, Pokemon White, Pokemon Black 2, Pokemon White 2", font=("Bahnschrift SemiBold", 8)).grid(row=9, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 6:    Kalos", variable=Gen6, font=("Bahnschrift SemiBold", 12)).grid(row=10, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon X, Pokemon Y, Pokemon Omega Ruby, Pokemon Alpha Sapphire", font=("Bahnschrift SemiBold", 8)).grid(row=11, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 7:    Alola", variable=Gen7, font=("Bahnschrift SemiBold", 12)).grid(row=12, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Sun, Pokemon Moon, Pokemon Ultra Sun, Pokemon Ultra Moon, Let's Go Pikachu, Let's Go Eevee", font=("Bahnschrift SemiBold", 8)).grid(row=13, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 8:    Galar, Hisui", variable=Gen8, font=("Bahnschrift SemiBold", 12)).grid(row=14, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Sword, Pokemon Shield, Pokemon Legends Arceus, Pokemon Brilliant Diamond, Pokemon Shining Pearl", font=("Bahnschrift SemiBold", 8)).grid(row=15, sticky="nsw", pady = 5, padx = 5)
+
+        tk.Checkbutton(self, text="Generation 9:    Paldea", variable=Gen9, font=("Bahnschrift SemiBold", 12)).grid(row=16, sticky="nsw", pady = 5, padx = 5)
+        tk.Label(self, text = "Pokemon Scarlet, Pokemon Violet, Pokemon Legends Z-A", font=("Bahnschrift SemiBold", 8)).grid(row=17, sticky="nsw", pady = 5, padx = 5)
+
 
 class TypeCheck(tk.Frame):
     def __init__(self, parent):
