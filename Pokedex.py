@@ -3,6 +3,7 @@ import requests
 import json
 from PIL import ImageTk, Image
 from PokemonPage import PokemonPage
+from FilteredPokemon import FilteredPokemon
 from difflib import SequenceMatcher
 
 #Main Tk objects
@@ -399,13 +400,11 @@ class AdvancedSearch(tk.Frame):
             typePokemon.append(x["pokemon"]["name"])
         
         filtered = set(typePokemon).intersection(set(genPokemon))
-        return filtered
+        filteredlist = list(filtered)
+        filteredlist.sort()
+        ResultsPage = FilteredPokemon(self, filteredlist)
         
                 
-                
-
-
-
 class GenCheck(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent, highlightbackground="red", highlightcolor="red", highlightthickness=2)
