@@ -340,6 +340,7 @@ class AdvancedSearch(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
+        #Page is split up exactly like the search page, Red bar header and footer, one row allocated for the buttons to the start and search pages as well as current page name, and a section for the meat of the page
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)
@@ -361,6 +362,7 @@ class AdvancedSearch(tk.Frame):
         Button = tk.Button(self, text = "Start -->", font=("Bahnschrift SemiBold", 10), width = 20, command = lambda:self.controller.topPage("Start"))
         Button.grid(row = 1, column = 2, sticky="ne", padx=10, pady=10)
 
+        #Meat of the page
         borderframe = tk.Frame(self, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         borderframe.grid(row = 2, column=0, columnspan=3, sticky="nsew", padx = 5, pady = 5)
         borderframe.grid_columnconfigure(0, weight = 1, uniform="col")
@@ -368,23 +370,34 @@ class AdvancedSearch(tk.Frame):
         borderframe.grid_rowconfigure(0, weight = 1)
         borderframe.grid_rowconfigure(1, weight = 1)
 
+        #left side column takes up 2 columns and contains generation checkboxes as well as generation information
         self.Generations = GenCheck(borderframe)
         self.Generations.grid(row = 0, column=0, sticky="nsew", padx = 5, pady = 5, rowspan=2)
 
+        #Right side 1st row displays the selectable types
         self.Type = TypeCheck(borderframe)
         self.Type.grid(row=0,column=1, sticky="nsew", padx = 5, pady = 5)
 
+        #button to take the selected type and generations and open the toplevel page with the filtered results.
         FilterButton = tk.Button(borderframe, text = "Filter Search", font=("Bahnschrift SemiBold", 15), width = 20, command=self.getFilters)
         FilterButton.grid(row = 1, column=1, padx = 5, pady = 5)
 
         Footer = tk.Frame(self, bg = "red", height = 10 )
         Footer.grid(row = 3, column=0,sticky="nsew", columnspan=3)
 
+    #Function the uses the selected generations and type and finds all the pokemon that intersect those parameters
     def getFilters(self):
+        #Functions that use the results given by the tkinter widgets to get the actual generations and types
         genList = self.Generations.getGen()
         type = self.Type.getType()
+
+        #initialize lists
         genPokemon = []
         typePokemon = []
+
+        #The getGen() function returns a list 9 long for 9 generations, and if an index is 0 it was not selected and 1 was selected
+        #use enumerate here so I can keep the index which is essentially the generation in question when 1 is added
+        #Add the pokemon in all the selected generations to genPokemon
         for gen, yes in enumerate(genList):
             if yes == 1:
                 url = f"https://pokeapi.co/api/v2/generation/{gen+1}/"
@@ -393,22 +406,26 @@ class AdvancedSearch(tk.Frame):
                 for i in data["pokemon_species"]:
                     genPokemon.append(i["name"])
         
+        #Type is less complicated, get the api call response and add all the pokemon names into typePokemon
         typeurl = "https://pokeapi.co/api/v2/type/" + type + "/"
         typeresponse = requests.get(typeurl)
         typedata = typeresponse.json()
         for x in typedata["pokemon"]:
             typePokemon.append(x["pokemon"]["name"])
         
+        #turn the lists into sets so we can use intersection on them to get the names that are in both, then turn it back to list
         filtered = set(typePokemon).intersection(set(genPokemon))
         filteredlist = list(filtered)
         filteredlist.sort()
+        #Make a FilteredPokemon topelevel page with the filtered list
         ResultsPage = FilteredPokemon(self, filteredlist)
         
-                
+#Frame that houses the generations selection widgets               
 class GenCheck(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         self.parent = parent
+        #Set the variables for all the checkbuttons
         self.Gen1 = tk.IntVar()
         self.Gen2 = tk.IntVar()
         self.Gen3 = tk.IntVar()
@@ -418,6 +435,7 @@ class GenCheck(tk.Frame):
         self.Gen7 = tk.IntVar()
         self.Gen8 = tk.IntVar()
         self.Gen9 = tk.IntVar()
+        #Checkbuttons for each generation
         tk.Checkbutton(self, text="Generation 1:    Kanto", variable=self.Gen1, font=("Bahnschrift SemiBold", 12)).grid(row=0, sticky="nsw", pady = 5, padx = 5)
         tk.Label(self, text = "Pokemon Red, Pokemon Blue, Pokemon Yellow", font=("Bahnschrift SemiBold", 8)).grid(row=1, sticky="nsw", pady = 5, padx = 5)
 
@@ -445,15 +463,16 @@ class GenCheck(tk.Frame):
         tk.Checkbutton(self, text="Generation 9:    Paldea", variable=self.Gen9, font=("Bahnschrift SemiBold", 12)).grid(row=16, sticky="nsw", pady = 5, padx = 5)
         tk.Label(self, text = "Pokemon Scarlet, Pokemon Violet, Pokemon Legends Z-A", font=("Bahnschrift SemiBold", 8)).grid(row=17, sticky="nsw", pady = 5, padx = 5)
     
+    #Get the varables set to the checkbuttons, 0 will mean it wasnt selected and 1 means it was selected, send them back in a list
     def getGen(self):
         return [self.Gen1.get(), self.Gen2.get(), self.Gen3.get(), self.Gen4.get(), self.Gen5.get(), self.Gen6.get(), self.Gen7.get(), self.Gen8.get(), self.Gen9.get()]
 
-
+#Frame that houses the type selection widgets        
 class TypeCheck(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent, highlightbackground="red", highlightcolor="red", highlightthickness=2)
         self.parent = parent
-
+        #Varaible that stores which type is selected and set it to 1(Fire) by default because setting a case for if one isnt selected is annoying
         self.Type = tk.IntVar()
         self.Type.set(1)
 
@@ -470,6 +489,7 @@ class TypeCheck(tk.Frame):
         self.grid_rowconfigure(7, weight=1, uniform="2")
         self.grid_rowconfigure(8, weight=1, uniform="2")
 
+        #All the radiobuttons for each type
         tk.Radiobutton(self, text = "Fire", variable=self.Type, value=1, font=("Bahnschrift SemiBold", 12)).grid(row = 0, column=0, padx = 5, pady = 5, sticky="nsw")
         tk.Radiobutton(self, text = "Water", variable=self.Type, value=2, font=("Bahnschrift SemiBold", 12)).grid(row = 0, column=1, padx = 5, pady = 5, sticky="nsw")
         tk.Radiobutton(self, text = "Grass", variable=self.Type, value=3, font=("Bahnschrift SemiBold", 12)).grid(row = 1, column=0, padx = 5, pady = 5, sticky="nsw")
@@ -489,6 +509,7 @@ class TypeCheck(tk.Frame):
         tk.Radiobutton(self, text = "Ghost", variable=self.Type, value=17, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=0, padx = 5, pady = 5, sticky="nsw")
         tk.Radiobutton(self, text = "Steel", variable=self.Type, value=18, font=("Bahnschrift SemiBold", 12)).grid(row = 8, column=1, padx = 5, pady = 5, sticky="nsw")
     
+    #Uses the values that are set in the radiobuttons widgets to reassociate what type was selected
     def getType(self):
         match self.Type.get():
             case 0:

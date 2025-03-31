@@ -1,7 +1,4 @@
 import tkinter as tk
-import requests
-import json
-import functools
 from PokemonPage import PokemonPage
 
 class FilteredPokemon(tk.Toplevel):
@@ -30,7 +27,7 @@ class FilteredPokemon(tk.Toplevel):
         self.scrollable.grid_columnconfigure(0, weight=1, uniform="1")
         self.canvas.create_window((0,0), window=self.scrollable, anchor="nw")
 
-        #make all the CharLayout objects for all the entries in the GENSHINCHARACTER table
+        #make all the SearchResult objects
         self.count = 0
         for row in self.filterlist:
             SearchResult(self.scrollable, row).grid(row=self.count//2,column=self.count%2, pady=20, padx = 55, sticky="nsew")
